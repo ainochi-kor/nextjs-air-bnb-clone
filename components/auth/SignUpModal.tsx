@@ -10,6 +10,7 @@ import Input from "../common/Input";
 import Selector from "../common/Selector";
 import { dayList, monthList, yearList } from "../../lib/staticData";
 import Button from "../common/Button";
+import { signupAPI } from "../../lib/api/auth";
 
 const Container = styled.div`
   width: 568px;
@@ -93,9 +94,9 @@ const SignUpModal: React.FC = () => {
   const [firstname, setFirstname] = useState("");
   const [password, setPassword] = useState("");
   const [hidePassword, setHidePassword] = useState(true);
-  const [brithYear, setBirthYaer] = useState<string | undefined>();
-  const [brithDay, setBirthDay] = useState<string | undefined>();
-  const [brithMonth, setBirthMonth] = useState<string | undefined>();
+  const [birthYear, setBirthYaer] = useState<string | undefined>();
+  const [birthDay, setBirthDay] = useState<string | undefined>();
+  const [birthMonth, setBirthMonth] = useState<string | undefined>();
 
   //* 이메일 주소 변경 시
   const onChangeEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -140,8 +141,36 @@ const SignUpModal: React.FC = () => {
     }
   };
 
+  //* 회원가입 폼 제출하기
+  const onSubmitSignUp = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    // setValidateMode(true);
+
+    // if (validateSignUpForm()) {
+    try {
+      const signUpBody = {
+        email,
+        lastname,
+        firstname,
+        password,
+        birthday: new Date(
+          `${birthYear}-${birthMonth!.replace("월", "")}-${birthDay}`
+        ).toISOString(),
+      };
+      const { data } = await signupAPI(signUpBody);
+
+      // dispatch(userActions.setLoggedUser(data));
+
+      // closeModal();
+    } catch (e) {
+      console.log(e);
+    }
+    // }
+  };
+
   return (
-    <Container>
+    <Container onSubmit={onSubmitSignUp}>
       <CloseXIcon className="mordal-close-x-icon" />
       <div className="input-wrapper">
         <Input
