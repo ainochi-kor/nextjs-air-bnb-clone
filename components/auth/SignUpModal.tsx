@@ -7,6 +7,8 @@ import OpenedEyeIcon from "../../public/static/svg/auth/opened_eye.svg";
 import ClosedEyeIcon from "../../public/static/svg/auth/closed_eye.svg";
 import palette from "../../styles/palette";
 import Input from "../common/Input";
+import Selector from "../common/Selector";
+import { dayList, monthList, yearList } from "../../lib/staticData";
 
 const Container = styled.div`
   width: 568px;
@@ -48,6 +50,34 @@ const Container = styled.div`
       cursor: pointer;
     }
   }
+
+  .sign-up-birthdat-label {
+    font-size: 16px;
+    font-weight: 600;
+    margin-top: 16px;
+    margin-bottom: 8px;
+  }
+
+  .sign-up-modal-birthday-info {
+    margin-bottom: 16px;
+    color: ${palette.charcoal};
+  }
+
+  .sign-up-modal-birthday-selectors {
+    display: flex;
+    margin-bottom: 24px;
+    .sign-up-modal-birthday-month-selector {
+      margin-rignt: 16px;
+      flex-grow: 1;
+    }
+    .sign-up-modal-birthday-day-selector {
+      margin-right: 16px;
+      width: 25%;
+    }
+    .sign-up-modal-birthday-year-selector {
+      width: 33.3333%;
+    }
+  }
 `;
 
 const SignUpModal: React.FC = () => {
@@ -56,6 +86,9 @@ const SignUpModal: React.FC = () => {
   const [firstname, setFirstname] = useState("");
   const [password, setPassword] = useState("");
   const [hidePassword, setHidePassword] = useState(true);
+  const [brithYear, setBirthYaer] = useState<string | undefined>();
+  const [brithDay, setBirthDay] = useState<string | undefined>();
+  const [brithMonth, setBirthMonth] = useState<string | undefined>();
 
   //* 이메일 주소 변경 시
   const onChangeEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -80,6 +113,24 @@ const SignUpModal: React.FC = () => {
   //* 비밀번호 숨김 토글하기
   const toggleHidePassword = () => {
     setHidePassword(!hidePassword);
+  };
+
+  //* 생년월일 변경시
+  const onChangeBirth = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const { name, value } = event.target;
+
+    switch (name) {
+      case "year":
+        setBirthYaer(value);
+        break;
+      case "month":
+        setBirthMonth(value);
+        break;
+      case "year":
+        setBirthDay(value);
+        break;
+      default:
+    }
   };
 
   return (
@@ -125,6 +176,40 @@ const SignUpModal: React.FC = () => {
           value={password}
           onChange={onChangePassword}
         />
+      </div>
+      <p className="sign-up-birthdat-label">생일</p>
+      <p className="sign-up-modal-birthday-info">
+        만 18세 이상의 성인만 회원으로 가입할 수 있습니다. 생일은 다른
+        에어비앤비 이용자에게 공개되지 않습니다.
+      </p>
+      <div className="sign-up-modal-birthday-selectors">
+        <div className="sign-up-modal-birthday-month-selector">
+          <Selector
+            options={monthList}
+            disabledOptions={["월"]}
+            defaultValue="월"
+            name="month"
+            onChange={onChangeBirth}
+          />
+        </div>
+        <div className="sign-up-modal-birthday-day-selector">
+          <Selector
+            options={dayList}
+            disabledOptions={["일"]}
+            defaultValue="일"
+            name="day"
+            onChange={onChangeBirth}
+          />
+        </div>
+        <div className="sign-up-modal-birthday-year-selector">
+          <Selector
+            options={yearList}
+            disabledOptions={["년"]}
+            defaultValue="년"
+            name="year"
+            onChange={onChangeBirth}
+          />
+        </div>
       </div>
     </Container>
   );
