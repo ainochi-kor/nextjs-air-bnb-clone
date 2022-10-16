@@ -5,9 +5,11 @@ import {
   useSelector as useReduxSelector,
 } from "react-redux";
 import user from "./user";
+import common from "./common";
 
 const rootReducer = combineReducers({
   user: user.reducer,
+  common: common.reducer,
 });
 
 //* 스토어의 타입
@@ -31,7 +33,7 @@ const reducer = (state: any, action: any) => {
 //* 타입 지원되는 커스텀 useSelector 만들기
 export const useSelector: TypedUseSelectorHook<RootState> = useReduxSelector;
 
-const initStore: MakeStore = (context) => {
+const initStore: MakeStore<any> = () => {
   const store = configureStore({
     reducer,
     devTools: true,

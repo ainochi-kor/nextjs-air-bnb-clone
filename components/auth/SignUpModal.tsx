@@ -13,6 +13,8 @@ import Button from "../common/Button";
 import { signupAPI } from "../../lib/api/auth";
 import { useDispatch } from "react-redux";
 import { userActions } from "../../store/user";
+import { commonActions } from "../../store/common";
+import useValidateMode from "../../hooks/useValidateMode";
 
 const Container = styled.div`
   width: 568px;
@@ -101,6 +103,7 @@ const SignUpModal: React.FC = () => {
   const [birthMonth, setBirthMonth] = useState<string | undefined>();
 
   const dispatch = useDispatch();
+  const { setValidateMode } = useValidateMode();
 
   //* 이메일 주소 변경 시
   const onChangeEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
