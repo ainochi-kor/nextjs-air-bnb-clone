@@ -11,6 +11,8 @@ import Selector from "../common/Selector";
 import { dayList, monthList, yearList } from "../../lib/staticData";
 import Button from "../common/Button";
 import { signupAPI } from "../../lib/api/auth";
+import { useDispatch } from "react-redux";
+import { userActions } from "../../store/user";
 
 const Container = styled.div`
   width: 568px;
@@ -98,6 +100,8 @@ const SignUpModal: React.FC = () => {
   const [birthDay, setBirthDay] = useState<string | undefined>();
   const [birthMonth, setBirthMonth] = useState<string | undefined>();
 
+  const dispatch = useDispatch();
+
   //* 이메일 주소 변경 시
   const onChangeEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
@@ -145,7 +149,7 @@ const SignUpModal: React.FC = () => {
   const onSubmitSignUp = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    // setValidateMode(true);
+    setValidateMode(true);
 
     // if (validateSignUpForm()) {
     try {
@@ -160,7 +164,7 @@ const SignUpModal: React.FC = () => {
       };
       const { data } = await signupAPI(signUpBody);
 
-      // dispatch(userActions.setLoggedUser(data));
+      dispatch(userActions.setLoggedUser(data));
 
       // closeModal();
     } catch (e) {
