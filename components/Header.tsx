@@ -121,28 +121,7 @@ const Header: React.FC = () => {
         <AirbnbLogoIcon className="header-logo" />
         <AirbnbLogoTextIcon />
       </div>
-      <div className="header-auth-buttons">
-        <button
-          type="button"
-          className="header-sign-up-button"
-          onClick={() => {
-            dispatch(authActions.setAuthMode("signup"));
-            openModal();
-          }}
-        >
-          회원가입
-        </button>
-        <button
-          type="button"
-          className="header-login-button"
-          onClick={() => {
-            dispatch(authActions.setAuthMode("login"));
-            openModal();
-          }}
-        >
-          로그인
-        </button>
-      </div>
+
       {modalOpened && (
         <ModalPortal>
           <SignUpModal closeModal={closeModal} />
@@ -162,11 +141,21 @@ const Header: React.FC = () => {
           <button
             type="button"
             className="header-sign-up-button"
-            onClick={openModal}
+            onClick={() => {
+              dispatch(authActions.setAuthMode("signup"));
+              openModal();
+            }}
           >
             회원가입
           </button>
-          <button type="button" className="header-login-button">
+          <button
+            type="button"
+            className="header-login-button"
+            onClick={() => {
+              dispatch(authActions.setAuthMode("login"));
+              openModal();
+            }}
+          >
             로그인
           </button>
         </div>

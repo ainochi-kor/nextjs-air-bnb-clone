@@ -6,6 +6,12 @@ import OpenedEyeIcon from "../../public/static/svg/auth/opened_eye.svg";
 import CloseEyeIcon from "../../public/static/svg/auth/closed_eye.svg";
 import Input from "../common/Input";
 import Button from "../common/Button";
+import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { authActions } from "../../store/auth";
+import { loginAPI } from "../../lib/api/auth";
+import useValidateMode from "../../hooks/useValidateMode";
+import { userActions } from "../../store/user";
 
 const Container = styled.form`
   width: 568px;
@@ -48,8 +54,62 @@ interface IProps {
 }
 
 const LoginModal: React.FC<IProps> = ({ closeModal }) => {
+  const dispatch = useDispatch();
+  const { setValidateMode } = useValidateMode();
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isPasswordHided, setIsPasswordHided] = useState(true);
+
+  //* 이메일 주소 변경 시
+  const onChangeEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(event.target.value);
+  };
+
+  //* 비밀번호 변경 시
+  const onChangePassword = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(event.target.value);
+  };
+
+  //* 비밀번호 아이콘 선택 시
+  const togglePasswordHiding = () => {
+    setIsPasswordHided(!isPasswordHided);
+  };
+
+  //* 회원가입 모달로 변경하기
+  const changeToSignUpModal = () => {
+    dispatch(authActions.setAuthMode("signup"));
+  };
+
+  //* 로그인 클릭 시
+  const onSubmitLogin = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setValidateMode(true);
+
+    if (!email || !password) {
+      alert("이메일과 비밀번호를 입력해주세요.");
+    } else {
+      const loginBody = { email, password };
+
+      try {
+        const { data } = await loginAPI(loginBody);
+        dispatch(userActions.setLoggedUser(data));
+        closeModal();
+      } catch (e) {
+        console.log("onSubmitLogin Error: ", e);
+      }
+    }
+  };
+
+  //* 컴포넌트 종료 시 validateMode 종료
+  useEffect(() => {
+    return () => {
+      setValidateMode(false);
+    };
+  }, []);
+
   return (
-    <Container>
+    <Container onSubmit={onSubmitLogin}>
       <CloseXIcon classname="mordal-close-x-icon" onClick={closeModal} />
       <div className="login-input-wrapper">
         <Input
@@ -57,14 +117,26 @@ const LoginModal: React.FC<IProps> = ({ closeModal }) => {
           name="email"
           type="email"
           icon={<MailIcon />}
+          onChange={onChangeEmail}
+          isValid={email !== ""}
+          errorMessage="이메일이 필요합니다."
         />
       </div>
       <div className="login-input-wrapper login-password-input-wrapper">
         <Input
           placeholder="비밀번호 설정하기"
           name="password"
-          type="password"
-          icon={<CloseEyeIcon />}
+          type={isPasswordHided ? "password" : "text"}
+          icon={
+            isPasswordHided ? (
+              <CloseEyeIcon onClick={togglePasswordHiding} />
+            ) : (
+              <OpenedEyeIcon onClick={togglePasswordHiding} />
+            )
+          }
+          onChange={onChangePassword}
+          isValid={password !== ""}
+          errorMessage="비밀번호를 입력하세요."
         />
       </div>
       <div className="login-modal-submit-button-wrapper">
@@ -72,7 +144,13 @@ const LoginModal: React.FC<IProps> = ({ closeModal }) => {
       </div>
       <p>
         이미 에어비앤비 계정이 있나요?
-        <span className="login-modal-set-signup">회원가입</span>
+        <span
+          className="login-modal-set-signup"
+          role="presentation"
+          onClick={changeToSignUpModal}
+        >
+          회원가입
+        </span>
       </p>
     </Container>
   );
