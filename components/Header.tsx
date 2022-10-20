@@ -12,6 +12,8 @@ import { useDispatch } from "react-redux";
 import { authActions } from "../store/auth";
 import OutsideClickHandler from "react-outside-click-handler";
 import Link from "next/link";
+import { logoutAPI } from "../lib/api/auth";
+import { userActions } from "../store/user";
 
 const Header: React.FC = () => {
   const [modalOpened, setModalOpened] = useState(false);
@@ -20,6 +22,16 @@ const Header: React.FC = () => {
   const [isUsermenuOpened, setIsUsermenuOpened] = useState(false); //* 유저 메뉴 열고, 닫힘 여부
 
   const dispatch = useDispatch();
+
+  //* 로그아웃 하기
+  const logout = async () => {
+    try {
+      await logoutAPI();
+      dispatch(userActions.initUser());
+    } catch (e) {
+      console.log(e.message);
+    }
+  };
 
   return (
     <Container>
@@ -67,7 +79,7 @@ const Header: React.FC = () => {
                 </a>
               </Link>
               <div className="header-usermenu-divider" />
-              <li role="presentation" onClick={() => {}}>
+              <li role="presentation" onClick={logout}>
                 로그아웃
               </li>
             </ul>
