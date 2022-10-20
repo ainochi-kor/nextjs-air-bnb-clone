@@ -1,3 +1,4 @@
+import React from "react";
 import styled from "styled-components";
 import palette from "../../styles/palette";
 
@@ -22,4 +23,4 @@ const Button: React.FC<IProps> = ({ children, ...props }) => {
   return <Container {...props}>{children}</Container>;
 };
 
-export default Button;
+export default React.memo(Button);
