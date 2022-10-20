@@ -16,6 +16,7 @@ import { userActions } from "../../store/user";
 import { commonActions } from "../../store/common";
 import useValidateMode from "../../hooks/useValidateMode";
 import PasswordWarning from "./PasswordWarning";
+import { authActions } from "../../store/auth";
 
 const PASSWORD_MIN_LENGTH = 8;
 
@@ -80,33 +81,33 @@ const SignUpModal: React.FC<IProps> = ({ closeModal }) => {
     }
   };
 
-  //* 회원가입 폼 제출하기
-  const onSubmitSignUp = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  // //* 회원가입 폼 제출하기
+  // const onSubmitSignUp = async (event: React.FormEvent<HTMLFormElement>) => {
+  //   event.preventDefault();
 
-    setValidateMode(true);
+  //   setValidateMode(true);
 
-    // if (validateSignUpForm()) {
-    try {
-      const signUpBody = {
-        email,
-        lastname,
-        firstname,
-        password,
-        birthday: new Date(
-          `${birthYear}-${birthMonth!.replace("월", "")}-${birthDay}`
-        ).toISOString(),
-      };
-      const { data } = await signupAPI(signUpBody);
+  //   // if (validateSignUpForm()) {
+  //   try {
+  //     const signUpBody = {
+  //       email,
+  //       lastname,
+  //       firstname,
+  //       password,
+  //       birthday: new Date(
+  //         `${birthYear}-${birthMonth!.replace("월", "")}-${birthDay}`
+  //       ).toISOString(),
+  //     };
+  //     const { data } = await signupAPI(signUpBody);
 
-      dispatch(userActions.setLoggedUser(data));
+  //     dispatch(userActions.setLoggedUser(data));
 
-      // closeModal();
-    } catch (e) {
-      console.log(e);
-    }
-    // }
-  };
+  //     // closeModal();
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+  //   // }
+  // };
 
   //* 비밀번호 인풋 포커스 되었을 때
   const onFocusPassword = () => {
@@ -153,36 +154,41 @@ const SignUpModal: React.FC<IProps> = ({ closeModal }) => {
     ) {
       return false;
     }
+  };
 
-    //* 회원가입 폼 제출하기
-    const onSubmitSignUp = async (evnet: React.FormEvent<HTMLFormElement>) => {
-      evnet.preventDefault();
+  //* 로그인 모달로 변경하기
+  const changeToLoginModal = () => {
+    dispatch(authActions.setAuthMode("login"));
+  };
 
-      setValidateMode(true);
-      console.log(validateSignUpForm());
+  //* 회원가입 폼 제출하기
+  const onSubmitSignUp = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
 
-      if (validateSignUpForm()) {
-        try {
-          const signUpBody = {
-            email,
-            lastname,
-            firstname,
-            password,
-            birthday: new Date(
-              `${birthYear}-${birthMonth!.replace("월", "")}-${birthDay}`
-            ).toISOString(),
-          };
-          const { data } = await signupAPI(signUpBody);
-          dispatch(userActions.setLoggedUser(data));
-          console.log(data);
+    setValidateMode(true);
+    console.log(validateSignUpForm());
 
-          dispatch(userActions.setLoggedUser(data));
-          closeModal();
-        } catch (e) {
-          console.log(e);
-        }
+    if (validateSignUpForm()) {
+      try {
+        const signUpBody = {
+          email,
+          lastname,
+          firstname,
+          password,
+          birthday: new Date(
+            `${birthYear}-${birthMonth!.replace("월", "")}-${birthDay}`
+          ).toISOString(),
+        };
+        const { data } = await signupAPI(signUpBody);
+        dispatch(userActions.setLoggedUser(data));
+        console.log(data);
+
+        dispatch(userActions.setLoggedUser(data));
+        closeModal();
+      } catch (e) {
+        console.log(e);
       }
-    };
+    }
   };
 
   useEffect(() => {
@@ -301,7 +307,7 @@ const SignUpModal: React.FC<IProps> = ({ closeModal }) => {
         <span
           className="sign-up-modal-set-login"
           role="presentation"
-          onClick={() => {}}
+          onClick={changeToLoginModal}
         >
           로그인
         </span>
@@ -312,7 +318,7 @@ const SignUpModal: React.FC<IProps> = ({ closeModal }) => {
 
 export default SignUpModal;
 
-const Container = styled.div`
+const Container = styled.form`
   width: 568px;
   padding: 32px;
   background-color: white;
