@@ -10,11 +10,17 @@ type InputContainerProps = {
 };
 
 const Container = styled.div<InputContainerProps>`
+  label {
+    span {
+      display: block;
+      margin-bottom: 8px;
+    }
+  }
   input {
     position: relative;
     width: 100%;
     height: 46px;
-    padding: ${({ iconExist }) => (iconExist ? "0 44px 0 11px" : "0 11px")};
+    padding: ${({ iconExist }) => (iconExist ? "0 44px 0 11px " : "0 11px")};
     border: 1px solid ${palette.gray_eb};
     border-radius: 4px;
     font-size: 16px;
@@ -23,7 +29,7 @@ const Container = styled.div<InputContainerProps>`
       color: ${palette.gray_76};
     }
     & :focus {
-      border-color: ${palette.dark_cyan} !important;
+      border-color: ${palette.dark_cyan};
     }
   }
   svg {
@@ -59,30 +65,41 @@ const Container = styled.div<InputContainerProps>`
     `}
 `;
 
-// React.InputHTMLAttributes<HTMLInputElement> : input 태그가 가지는 속성들에 대한 타입 값
 interface IProps extends React.InputHTMLAttributes<HTMLInputElement> {
   icon?: JSX.Element;
+  label?: string;
   isValid?: boolean;
   useValidation?: boolean;
   errorMessage?: string;
 }
 
 const Input: React.FC<IProps> = ({
+  label,
   icon,
-  isValid,
-  useValidation,
+  isValid = false,
+  useValidation = true,
   errorMessage,
   ...props
 }) => {
   const validateMode = useSelector((state) => state.common.validateMode);
+
   return (
     <Container
       iconExist={!!icon}
       isValid={isValid}
       useValidation={validateMode && useValidation}
     >
-      <input {...props} />
-      <div className="input-icon-wrapper">{icon}</div>
+      {label && (
+        <label>
+          <span>{label}</span>
+          <input {...props} />
+        </label>
+      )}
+      {!label && <input {...props} />}
+      {icon}
+      {useValidation && validateMode && !isValid && errorMessage && (
+        <p className="input-error-message">{errorMessage}</p>
+      )}
     </Container>
   );
 };
