@@ -1,12 +1,12 @@
 import React, { useMemo } from "react";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
-import { largeBuildingTypeList } from "../../lib/staticData";
-import { useSelector } from "../../store";
-import { registerRoomActions } from "../../store/registerRoom";
-import palette from "../../styles/palette";
-import RadioGroup from "../common/RadioGroup";
-import Selector from "../common/Selector";
+import { largeBuildingTypeList } from "../../../lib/staticData";
+import { useSelector } from "../../../store";
+import { registerRoomActions } from "../../../store/registerRoom";
+import palette from "../../../styles/palette";
+import RadioGroup from "../../common/RadioGroup";
+import Selector from "../../common/Selector";
 import RegisterRoomFooter from "./RegisterRoomFooter";
 
 const Container = styled.div`
