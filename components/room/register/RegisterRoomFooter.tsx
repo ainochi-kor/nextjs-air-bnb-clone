@@ -2,7 +2,7 @@ import Link from "next/link";
 import React, { useEffect } from "react";
 import styled from "styled-components";
 import useValidateMode from "../../../hooks/useValidateMode";
-import BackArrowIcon from "../../public/static/svg/register/register_room_footer_back_arrow.svg";
+import BackArrowIcon from "../../../public/static/svg/register/register_room_footer_back_arrow.svg";
 import palette from "../../../styles/palette";
 import Button from "../../common/Button";
 

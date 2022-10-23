@@ -72,8 +72,7 @@ const Container = styled.div`
   .counter-description {
     display: block;
     font-size: 14px;
-    color: ${palette.gray_48};
-    font-weight: 600;
+    color: ${palette.gray_71};
   }
   .counter-contents {
     display: flex;
@@ -83,7 +82,7 @@ const Container = styled.div`
 
     button {
       width: 32px;
-      heigth: 32px;
+      height: 32px;
       display: flex;
       justify-content: center;
       align-items: center;
