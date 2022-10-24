@@ -11,7 +11,19 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     try {
       const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&language=ko&key=${process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY}`;
       const { data } = await axios.get(url);
-      console.log(data);
+      const addressComponent = data.results[0].address_components;
+      const { lat, lng } = data.results[0].geometry.location;
+      const result = {
+        latitude: lat,
+        longitude: lng,
+        country: addressComponent[4].long_name,
+        city: addressComponent[3].long_name,
+        district: addressComponent[2].long_name,
+        streetAddress: `${addressComponent[1].long_name} ${addressComponent[0].long_name}`,
+        postcode: addressComponent[5].long_name,
+      };
+      res.statusCode = 200;
+      res.send(result);
     } catch (e) {
       res.statusCode = 404;
       return res.end();
