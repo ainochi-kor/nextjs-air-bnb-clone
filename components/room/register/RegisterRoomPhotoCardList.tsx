@@ -5,12 +5,67 @@ import PencilIcon from "../../../public/static/svg/register/photo/pencil.svg";
 import TrashCanIcon from "../../../public/static/svg/register/photo/trash_can.svg";
 import GrayPlusIcon from "../../../public/static/svg/register/photo/gray_plus.svg";
 import palette from "../../../styles/palette";
+import { useDispatch } from "react-redux";
+import { uploadFileAPI } from "../../../lib/api/file";
+import { registerRoomActions } from "../../../store/registerRoom";
+import index from "../../../pages";
 
 interface P {
   photos: string[];
 }
 
 const RegisterRoomPhotoCardList: React.FC<P> = ({ photos }) => {
+  const dispatch = useDispatch();
+
+  //* 사진 추가하기
+  const addPhoto = () => {
+    const el = document.createElement("input");
+    el.type = "file";
+    el.accept = "image/*";
+    el.onchange = (e) => {
+      const { files } = e.target as HTMLInputElement;
+      if (files && files.length > 0) {
+        const file = files[0];
+        const formData = new FormData();
+        formData.append("file", file);
+        uploadFileAPI(formData)
+          .then(({ data }) => {
+            dispatch(registerRoomActions.setPhotos([...photos, data]));
+          })
+          .catch((e) => console.log(e));
+      }
+    };
+    el.click();
+  };
+
+  //* 사진 삭제하기
+  const deletePhoto = (idx: number) => {
+    const newPhotos = [...photos];
+    newPhotos.splice(idx, 1);
+    dispatch(registerRoomActions.setPhotos(newPhotos));
+  };
+
+  //* 사진 수정하기
+  const editPhoto = (idx: number) => {
+    const el = document.createElement("input");
+    el.type = "file";
+    el.onchange = (e) => {
+      const file = (e.target as HTMLInputElement)?.files?.[0];
+      if (file) {
+        const formData = new FormData();
+        formData.append("file", file);
+        uploadFileAPI(formData)
+          .then(({ data }) => {
+            const newPhotos = [...photos];
+            newPhotos[idx] = data;
+            dispatch(registerRoomActions.setPhotos(newPhotos));
+          })
+          .catch((e) => console.log(e.message));
+      }
+    };
+    el.click();
+  };
+
   return (
     <Container>
       {photos.map((photo, idx) => (
@@ -19,10 +74,10 @@ const RegisterRoomPhotoCardList: React.FC<P> = ({ photos }) => {
             <li className="register-room-first-photo-wrapper">
               <img src={photo} alt="" />
               <div className="register-room-photo-interaction-buttons">
-                <button type="button" onClick={() => {}}>
+                <button type="button" onClick={() => deletePhoto(idx)}>
                   <TrashCanIcon />
                 </button>
-                <button type="button" onClick={() => {}}>
+                <button type="button" onClick={() => editPhoto(idx)}>
                   <PencilIcon />
                 </button>
               </div>
@@ -32,10 +87,10 @@ const RegisterRoomPhotoCardList: React.FC<P> = ({ photos }) => {
             <li className="register-room-photo-card">
               <img src={photo} alt="" />
               <div className="register-room-photo-interaction-buttons">
-                <button type="button" onClick={() => {}}>
+                <button type="button" onClick={() => deletePhoto(idx)}>
                   <TrashCanIcon />
                 </button>
-                <button type="button" onClick={() => {}}>
+                <button type="button" onClick={() => editPhoto(idx)}>
                   <PencilIcon />
                 </button>
               </div>
@@ -43,7 +98,11 @@ const RegisterRoomPhotoCardList: React.FC<P> = ({ photos }) => {
           )}
         </React.Fragment>
       ))}
-      <li className="register-room-photo-card" role="presentation" onClick={}>
+      <li
+        className="register-room-photo-card"
+        role="presentation"
+        onClick={addPhoto}
+      >
         <div className="register-room-add-more-photo-card">
           <GrayPlusIcon />
           추가하기

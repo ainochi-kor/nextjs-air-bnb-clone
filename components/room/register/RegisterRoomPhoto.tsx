@@ -9,6 +9,7 @@ import { uploadFileAPI } from "../../../lib/api/file";
 import { useDispatch } from "react-redux";
 import { registerRoomActions } from "../../../store/registerRoom";
 import RegisterRoomPhotoCardList from "./RegisterRoomPhotoCardList";
+import RegisterRoomFooter from "./RegisterRoomFooter";
 
 interface P {}
 
@@ -53,6 +54,10 @@ const RegisterRoomPhoto: React.FC<P> = () => {
         </div>
       )}
       {!isEmpty(photos) && <RegisterRoomPhotoCardList photos={photos} />}
+      <RegisterRoomFooter
+        prevHref="/room/register/conveniences"
+        nextHref="/room/register/description"
+      />
     </Container>
   );
 };
