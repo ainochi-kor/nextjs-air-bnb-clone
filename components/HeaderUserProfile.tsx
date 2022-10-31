@@ -1,14 +1,14 @@
-import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { useSelector } from "../store";
+import React, { useState } from "react";
 import OutsideClickHandler from "react-outside-click-handler";
+import { useDispatch } from "react-redux";
+import Link from "next/link";
+import HamburgerIcon from "../public/static/svg/header/hamburger.svg";
 import { logoutAPI } from "../lib/api/auth";
 import { userActions } from "../store/user";
-import HamburgerIcon from "../public/static/svg/header/hamburger.svg";
-import Link from "next/link";
+import { useSelector } from "../store";
 
 const HeaderUserProfile: React.FC = () => {
-  //* 유저 메뉴 열고, 닫힘 여부
+  //* 유저메뉴 열고,닫힘 여부
   const [isUsermenuOpened, setIsUsermenuOpened] = useState(false);
   const userProfileImage = useSelector((state) => state.user.profileImage);
 

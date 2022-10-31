@@ -9,27 +9,23 @@ import SignUpModal from "./auth/SignUpModal";
 import { useDispatch } from "react-redux";
 import HeaderAuths from "./HeaderAuth";
 import HeaderUserProfile from "./HeaderUserProfile";
+import Link from "next/link";
 
 const Header: React.FC = () => {
-  const [modalOpened, setModalOpened] = useState(false);
-  const { openModal, ModalPortal, closeModal } = useModal();
   const isLogged = useSelector((state) => state.user.isLogged);
 
   const dispatch = useDispatch();
 
   return (
     <Container>
-      <div className="header-logo-wrapper">
-        <AirbnbLogoIcon className="header-logo" />
-        <AirbnbLogoTextIcon />
-      </div>
-
-      {modalOpened && (
-        <ModalPortal>
-          <SignUpModal closeModal={closeModal} />
-        </ModalPortal>
-      )}
-      {isLogged ? <HeaderUserProfile /> : <HeaderAuths />}
+      <Link href="/">
+        <a className="header-logo-wrapper">
+          <AirbnbLogoIcon className="header-logo" />
+          <AirbnbLogoTextIcon />
+        </a>
+      </Link>
+      {!isLogged && <HeaderAuths />}
+      {isLogged && <HeaderUserProfile />}
     </Container>
   );
 };

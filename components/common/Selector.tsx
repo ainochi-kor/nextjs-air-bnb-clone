@@ -1,7 +1,8 @@
+/* eslint-disable indent */
 import React from "react";
 import styled, { css } from "styled-components";
-import { useSelector } from "../../store";
 import palette from "../../styles/palette";
+import { useSelector } from "../../store";
 import WarningIcon from "../../public/static/svg/common/warning.svg";
 
 const normalSelectorStyle = css`
@@ -13,6 +14,7 @@ const normalSelectorStyle = css`
     height: 100%;
     background-color: white;
     border: 1px solid ${palette.gray_eb};
+    font-size: 16px;
     padding: 0 11px;
     border-radius: 4px;
     outline: none;
@@ -20,7 +22,6 @@ const normalSelectorStyle = css`
     background-image: url("/static/svg/common/selector/selector_down_arrow.svg");
     background-position: right 11px center;
     background-repeat: no-repeat;
-    font-size: 16px;
     &:focus {
       border-color: ${palette.dark_cyan};
     }
@@ -51,6 +52,7 @@ const RegisterSelectorStyle = css`
     background-image: url("/static/svg/common/selector/register_selector_down_arrow.svg");
     background-position: right 14px center;
     background-repeat: no-repeat;
+    font-size: 16px;
   }
 `;
 
@@ -59,17 +61,14 @@ interface SelectorContainerProps {
   validateMode: boolean;
   type: "register" | "normal";
 }
-
 const Container = styled.div<SelectorContainerProps>`
   ${({ type }) => type === "normal" && normalSelectorStyle};
   ${({ type }) => type === "register" && RegisterSelectorStyle};
-  width: 100%;
-  height: 46px;
 
   select {
-    ${({ isValid, validateMode }) => {
+    ${({ validateMode, isValid }) => {
       if (validateMode) {
-        if (isValid) {
+        if (!isValid) {
           return css`
             border-color: ${palette.tawny};
             background-color: ${palette.snow};
@@ -94,7 +93,7 @@ const Container = styled.div<SelectorContainerProps>`
   .selector-warning {
     margin-top: 8px;
     display: flex;
-    align-item: center;
+    align-items: center;
 
     svg {
       margin-right: 4px;
@@ -117,27 +116,23 @@ interface IProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
   disabledOptions?: string[];
 }
 
-// interface IProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
-//   options?: string[];
-//   disabledOptions?: string[];
-//   value?: string;
-//   isValid?: boolean;
-// }
-
 const Selector: React.FC<IProps> = ({
   label,
   options = [],
-  value,
   isValid,
-  useValidation,
-  errorMessage,
-  type,
-  disabledOptions,
+  useValidation = true,
+  errorMessage = "옵션을 선택하세요.",
+  type = "normal",
+  disabledOptions = [],
   ...props
 }) => {
   const validateMode = useSelector((state) => state.common.validateMode);
   return (
-    <Container isValid={!!isValid} validateMode={validateMode} type={type}>
+    <Container
+      isValid={!!isValid}
+      validateMode={useValidation && validateMode}
+      type={type}
+    >
       <label>
         {label && <span>{label}</span>}
         <select {...props}>

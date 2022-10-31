@@ -10,6 +10,8 @@ type InputContainerProps = {
 };
 
 const Container = styled.div<InputContainerProps>`
+  display: flex;
+  align-items: center;
   label {
     span {
       display: block;
@@ -31,11 +33,6 @@ const Container = styled.div<InputContainerProps>`
     & :focus {
       border-color: ${palette.dark_cyan};
     }
-  }
-  svg {
-    position: absolute;
-    right: 11px;
-    height: 46px;
   }
   .input-error-message {
     margin-top: 8px;
