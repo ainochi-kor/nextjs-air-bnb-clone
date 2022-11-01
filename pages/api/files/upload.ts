@@ -17,20 +17,22 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       const url = await new Promise((resolve, reject) => {
         form.parse(req, async (err, fields, files) => {
           const s3 = new aws.S3({
-            accessKeyId: process.env.ACCESSKEY_ID!,
-            secretAccessKey: process.env.SECRET_ACCESSKEY_ID!,
+            accessKeyId: process.env.AWS_S3_ACCESSKEY_ID!,
+            secretAccessKey: process.env.AWS_S3_SECRET_ACCESSKEY_ID!,
           });
 
-          const stream = createReadStream(files.file.path);
+          const stream = createReadStream(files.file.filepath);
 
           //* 파일이름
-          const originalFileName = files.file.name.split(".").shift();
+          const originalFileName = files.file.originalFilename
+            .split(".")
+            .shift();
           //* 확장자
-          const fileExtension = files.file.name.split(".").pop();
-
+          const fileExtension = files.file.originalFilename.split(".").pop();
+          
           await s3
             .upload({
-              Bucket: process.env.S3_BUCKET_NAME!,
+              Bucket: process.env.AWS_S3_BUCKET_NAME!,
               Key: `${originalFileName}__${uuidv4()}.${fileExtension}`,
               ACL: "public-read",
               Body: stream,

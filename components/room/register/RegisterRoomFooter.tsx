@@ -36,7 +36,11 @@ interface P {
   isValid?: boolean;
 }
 
-const RegisterRoomFooter: React.FC<P> = ({ prevHref, nextHref, isValid }) => {
+const RegisterRoomFooter: React.FC<P> = ({
+  prevHref,
+  nextHref,
+  isValid = true,
+}) => {
   const { setValidateMode } = useValidateMode();
 
   //* 계속 버튼 클릭 시

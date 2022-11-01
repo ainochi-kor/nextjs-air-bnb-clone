@@ -53,7 +53,7 @@ const Container = styled.div<{ isValid: boolean; validateMode: boolean }>`
         if (!isValid) {
           return css`
             border-color: ${palette.tawny};
-            backgroundc-color: ${palette.snow};
+            background-color: ${palette.snow};
           `;
         }
         return css`
@@ -63,6 +63,7 @@ const Container = styled.div<{ isValid: boolean; validateMode: boolean }>`
       return undefined;
     }}
   }
+
   input[type="radio"]:checked {
     background-color: ${palette.dark_cyan};
     border: 0;
@@ -71,7 +72,7 @@ const Container = styled.div<{ isValid: boolean; validateMode: boolean }>`
     content: "";
     width: 6px;
     height: 6px;
-    margin: auth;
+    margin: auto;
     position: absolute;
     top: 0;
     left: 0;
@@ -96,7 +97,6 @@ const Container = styled.div<{ isValid: boolean; validateMode: boolean }>`
     svg {
       margin-right: 4px;
     }
-
     p {
       font-size: 12px;
       color: ${palette.davison_orange};
@@ -151,4 +151,4 @@ const RadioGroup: React.FC<IProps> = ({
   );
 };
 
-export default RadioGroup
+export default RadioGroup;

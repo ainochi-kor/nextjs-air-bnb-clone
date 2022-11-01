@@ -14,8 +14,9 @@ import RegisterRoomFooter from "./RegisterRoomFooter";
 interface P {}
 
 const RegisterRoomPhoto: React.FC<P> = () => {
-  const dispatch = useDispatch();
   const photos = useSelector((state) => state.registerRoom.photos);
+
+  const dispatch = useDispatch();
 
   //* 이미지 업로드 하기
   const uploadImage = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -26,6 +27,8 @@ const RegisterRoomPhoto: React.FC<P> = () => {
       formdata.append("file", file);
       try {
         const { data } = await uploadFileAPI(formdata);
+        console.log("data", data);
+
         if (data) {
           dispatch(registerRoomActions.setPhotos([...photos, data]));
         }
@@ -40,7 +43,7 @@ const RegisterRoomPhoto: React.FC<P> = () => {
       <h2>숙소 사진 올리기</h2>
       <h3>7단계</h3>
       <p className="register-room-step-info">
-        게스트가 사진을 보고 숙소의 느낌을 생생한 떠올려볼 수 있도록 해주세요.
+        게스트가 사진을 보고 숙소의 느낌을 생생히 떠올려볼 수 있도록 해주세요.
         우선 사진 1장을 업로드하고 숙소를 등록한 후에 추가할 수 있습니다.
       </p>
       {isEmpty(photos) && (

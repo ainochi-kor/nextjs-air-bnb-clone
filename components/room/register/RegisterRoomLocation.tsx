@@ -12,42 +12,57 @@ import { registerRoomActions } from "../../../store/registerRoom";
 import { getLocationInfoAPI } from "../../../lib/api/map";
 import RegisterRoomFooter from "./RegisterRoomFooter";
 
+const disabledCountryOptions = ["국가/지역 선택"];
+
 const RegisterRoomLocation: React.FC = () => {
-  const dispatch = useDispatch();
   const country = useSelector((state) => state.registerRoom.country);
   const city = useSelector((state) => state.registerRoom.city);
   const district = useSelector((state) => state.registerRoom.district);
+  const streetAddress = useSelector(
+    (state) => state.registerRoom.streetAddress
+  );
   const detailAddress = useSelector(
     (state) => state.registerRoom.detailAddress
   );
   const postcode = useSelector((state) => state.registerRoom.postcode);
-  const streetAddress = useSelector(
-    (state) => state.registerRoom.streetAddress
-  );
+
+  //* 현재 주소 불러오기 로딩
   const [loading, setLoading] = useState(false);
 
-  //* 나라 변경 시
-  const onChangeCountry = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    dispatch(registerRoomActions.setCountry(e.target.value));
+  const dispatch = useDispatch();
+
+  //* 나라 변경시
+  const onChangeCountry = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    dispatch(registerRoomActions.setCountry(event.target.value));
   };
-  const onChangeCity = (e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(registerRoomActions.setCity(e.target.value));
+
+  //* 시/도 변경시
+  const onChangeCity = (event: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch(registerRoomActions.setCity(event.target.value));
   };
-  const onChangeDistrict = (e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(registerRoomActions.setDistrict(e.target.value));
+
+  //* 시/군/구 변경시
+  const onChangeDistrict = (event: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch(registerRoomActions.setDistrict(event.target.value));
   };
-  const onChangeStreetAddress = (e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(registerRoomActions.setStreetAddress(e.target.value));
+
+  //* 도로명주소 변경시
+  const onChangeStreetAdress = (event: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch(registerRoomActions.setStreetAddress(event.target.value));
   };
-  const onChangeDetailAddress = (e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(registerRoomActions.setDetailAddress(e.target.value));
+  //*동호수 변경시
+  const onChangeDetailAddress = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    dispatch(registerRoomActions.setDetailAddress(event.target.value));
   };
+  //*우편번호 변경시
   const onChangePostcode = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(registerRoomActions.setPostcode(e.target.value));
   };
 
   //* 현재 위치 불러오기에 성공했을 때
-  const onSuccessGetLocation = async ({ coords }: { coords: any }) => {
+  const onSuccessGetLocation = async ({ coords }: any) => {
     try {
       const { data: currentLocation } = await getLocationInfoAPI({
         latitude: coords.latitude,
@@ -64,12 +79,11 @@ const RegisterRoomLocation: React.FC = () => {
       dispatch(registerRoomActions.setLongitude(currentLocation.longitude));
     } catch (e) {
       console.log(e);
-      alert(e?.message);
     }
     setLoading(false);
   };
 
-  //* 현재 위치 사용 클릭 시
+  //* 현재 위치 불러오기
   const onClickGetCurrentLocation = () => {
     setLoading(true);
     navigator.geolocation.getCurrentPosition(onSuccessGetLocation, (e) => {
@@ -100,8 +114,8 @@ const RegisterRoomLocation: React.FC = () => {
           options={countryList}
           useValidation={false}
           defaultValue="국가/지역 선택"
-          disabledOptions={["국가/지역 선택"]}
-          value={country}
+          disabledOptions={disabledCountryOptions}
+          value={country || undefined}
           onChange={onChangeCountry}
         />
       </div>
@@ -113,7 +127,7 @@ const RegisterRoomLocation: React.FC = () => {
         <Input
           label="도로명주소"
           value={streetAddress}
-          onChange={onChangeStreetAddress}
+          onChange={onChangeStreetAdress}
         />
       </div>
       <div className="register-room-location-detail-address">
@@ -145,6 +159,7 @@ const Container = styled.div`
     margin-bottom: 56px;
   }
   h3 {
+    font-size: 14px;
     font-weight: bold;
     color: ${palette.gray_76};
     margin-bottom: 6px;
@@ -161,5 +176,24 @@ const Container = styled.div`
   .register-room-location-country-selector-wrapper {
     width: 385px;
     margin-bottom: 24px;
+  }
+  .register-room-location-city-district {
+    max-width: 385px;
+    display: flex;
+    margin-bottom: 24px;
+    > div:first-child {
+      margin-right: 24px;
+    }
+  }
+  .register-room-location-street-address {
+    max-width: 385px;
+    margin-bottom: 24px;
+  }
+  .register-room-location-detail-address {
+    max-width: 385px;
+    margin-bottom: 24px;
+  }
+  .register-room-location-postcode {
+    max-width: 385px;
   }
 `;

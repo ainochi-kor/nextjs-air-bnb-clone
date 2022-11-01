@@ -90,7 +90,7 @@ const Container = styled.button<StyledButtonProps>`
   white-space: nowrap;
 `;
 
-interface IProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface P extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
   color?: "dark_cyan" | "white" | "bittersweet" | "amaranth";
   size?: "small" | "medium";
@@ -99,7 +99,7 @@ interface IProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   icon?: JSX.Element;
 }
 
-const Button: React.FC<IProps> = ({
+const Button: React.FC<P> = ({
   children,
   color,
   size = "medium",

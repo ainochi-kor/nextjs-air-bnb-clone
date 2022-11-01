@@ -1,36 +1,39 @@
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
+import { bedroomCountList } from "../../../lib/staticData";
+import { getNumber } from "../../../lib/utils";
 import { useSelector } from "../../../store";
 import { registerRoomActions } from "../../../store/registerRoom";
 import palette from "../../../styles/palette";
 import Button from "../../common/Button";
 import Counter from "../../common/Counter";
 import Selector from "../../common/Selector";
-import RegisterRommBedList from "./RegisterRommBedList";
-import RegisterRoomBedTypes from "./RegisterRoomBedTypes";
+import RegisterRoomBedList from "./RegisterRommBedList";
 import RegisterRoomFooter from "./RegisterRoomFooter";
 
 const RegisterRoomBedrooms: React.FC = () => {
-  const dispatch = useDispatch();
-  const bedroomCount = useSelector((state) => state.registerRoom.bedroomCount);
-  const bedCount = useSelector((state) => state.registerRoom.bedCount);
-  const bedList = useSelector((state) => state.registerRoom.bedList);
-  const mamximumGuestCount = useSelector(
+  const maximumGuestCount = useSelector(
     (state) => state.registerRoom.maximumGuestCount
   );
+  const bedroomCount = useSelector((state) => state.registerRoom.bedroomCount);
+  const bedCount = useSelector((state) => state.registerRoom.bedCount);
 
-  //* 최대 숙박 인원 변경 시
+  const dispatch = useDispatch();
+
+  //* 최대 숙박 인원 변경시
   const onChangeMaximumGuestCount = (value: number) => {
-    const bedroomCount = useSelector(
-      (state) => state.registerRoom.bathroomCount
-    );
     dispatch(registerRoomActions.setMaximumGuestCount(value));
   };
 
-  //* 침대 개수 변경 시
+  //* 침실 갯수 변경시
+  const onChangeBedroomCount = (event: React.ChangeEvent<HTMLSelectElement>) =>
+    dispatch(
+      registerRoomActions.setBedroomCount(getNumber(event.target.value) || 0)
+    );
+
+  //* 침대 갯수 변경시
   const onChangeBedCount = (value: number) =>
     dispatch(registerRoomActions.setBedCount(value));
-
   return (
     <Container>
       <h2>숙소에 얼마나 많은 인원이 숙박할 수 있나요?</h2>
@@ -42,30 +45,32 @@ const RegisterRoomBedrooms: React.FC = () => {
       <div className="register-room-mamximum-guest-count-wrapper">
         <Counter
           label="최대 숙박 인원"
-          value={mamximumGuestCount}
+          value={maximumGuestCount}
           onChange={onChangeMaximumGuestCount}
         />
       </div>
       <div className="register-room-bedroom-count-wrapper">
         <Selector
           type="register"
+          value={`침실 ${bedroomCount}개`}
+          onChange={onChangeBedroomCount}
           label="게스트가 사용할 수 있는 침실은 몇 개인가요?"
+          options={bedroomCountList}
           isValid={!!bedroomCount}
         />
       </div>
       <div className="register-room-bed-count-wrapper">
+        <p className="register-room-bed-count-label">
+          게스트가 사용할 수 있는 침대는 몇 개인가요?
+        </p>
         <Counter label="침대" value={bedCount} onChange={onChangeBedCount} />
       </div>
-      <ul className="register-room-bed-type-list-wrapper">
-        {bedList.map((bedroom) => (
-          <RegisterRoomBedTypes bedroom={bedroom} />
-        ))}
-      </ul>
+      <h4>침대유형</h4>
       <p className="register-room-bed-type-info">
         각 침실에 놓인 침대 유형을 명시하면 숙소에 침대가 어떻게 구비되어 있는지
         게스트가 잘 파악할 수 있습니다.
       </p>
-      <RegisterRommBedList />
+      <RegisterRoomBedList />
       <RegisterRoomFooter
         prevHref="/room/register/building"
         nextHref="/room/register/bathroom"
