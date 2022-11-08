@@ -1,13 +1,13 @@
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import palette from "../../styles/palette";
+import { useDispatch } from "react-redux";
 import CloseXIcon from "../../public/static/svg/modal/modal_colose_x_icon.svg";
 import MailIcon from "../../public/static/svg/auth/mail.svg";
 import OpenedEyeIcon from "../../public/static/svg/auth/opened_eye.svg";
-import CloseEyeIcon from "../../public/static/svg/auth/closed_eye.svg";
-import Input from "../common/Input";
+import ClosedEyeIcon from "../../public/static/svg/auth/closed_eye.svg";
+import palette from "../../styles/palette";
 import Button from "../common/Button";
-import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import Input from "../common/Input";
 import { authActions } from "../../store/auth";
 import { loginAPI } from "../../lib/api/auth";
 import useValidateMode from "../../hooks/useValidateMode";
@@ -41,7 +41,6 @@ const Container = styled.form`
     padding-bottom: 16px;
     border-bottom: 1px solid ${palette.gray_eb};
   }
-
   .login-modal-set-signup {
     color: ${palette.dark_cyan};
     margin-left: 8px;
@@ -54,26 +53,27 @@ interface IProps {
 }
 
 const LoginModal: React.FC<IProps> = ({ closeModal }) => {
-  const dispatch = useDispatch();
-  const { setValidateMode } = useValidateMode();
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const dispatch = useDispatch();
+
   const [isPasswordHided, setIsPasswordHided] = useState(true);
 
-  //* 이메일 주소 변경 시
+  const { setValidateMode } = useValidateMode();
+
+  //*비밀번호 숨김 토글하기
+  const togglePasswordHiding = () => {
+    setIsPasswordHided(!isPasswordHided);
+  };
+
+  //* 이메일 주소 변경시
   const onChangeEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
   };
 
-  //* 비밀번호 변경 시
+  //* 비밀번호 변경시
   const onChangePassword = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(event.target.value);
-  };
-
-  //* 비밀번호 아이콘 선택 시
-  const togglePasswordHiding = () => {
-    setIsPasswordHided(!isPasswordHided);
   };
 
   //* 회원가입 모달로 변경하기
@@ -81,13 +81,12 @@ const LoginModal: React.FC<IProps> = ({ closeModal }) => {
     dispatch(authActions.setAuthMode("signup"));
   };
 
-  //* 로그인 클릭 시
+  //* 로그인 클릭시
   const onSubmitLogin = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setValidateMode(true);
-
     if (!email || !password) {
-      alert("이메일과 비밀번호를 입력해주세요.");
+      alert("이메일과 비밀번호를 입력해 주세요.");
     } else {
       const loginBody = { email, password };
 
@@ -96,12 +95,11 @@ const LoginModal: React.FC<IProps> = ({ closeModal }) => {
         dispatch(userActions.setLoggedUser(data));
         closeModal();
       } catch (e) {
-        console.log("onSubmitLogin Error: ", e);
+        console.log(e.response);
       }
     }
   };
 
-  //* 컴포넌트 종료 시 validateMode 종료
   useEffect(() => {
     return () => {
       setValidateMode(false);
@@ -110,13 +108,14 @@ const LoginModal: React.FC<IProps> = ({ closeModal }) => {
 
   return (
     <Container onSubmit={onSubmitLogin}>
-      <CloseXIcon classname="mordal-close-x-icon" onClick={closeModal} />
+      <CloseXIcon className="mordal-close-x-icon" onClick={closeModal} />
       <div className="login-input-wrapper">
         <Input
           placeholder="이메일 주소"
           name="email"
           type="email"
           icon={<MailIcon />}
+          value={email}
           onChange={onChangeEmail}
           isValid={email !== ""}
           errorMessage="이메일이 필요합니다."
@@ -129,18 +128,21 @@ const LoginModal: React.FC<IProps> = ({ closeModal }) => {
           type={isPasswordHided ? "password" : "text"}
           icon={
             isPasswordHided ? (
-              <CloseEyeIcon onClick={togglePasswordHiding} />
+              <ClosedEyeIcon onClick={togglePasswordHiding} />
             ) : (
               <OpenedEyeIcon onClick={togglePasswordHiding} />
             )
           }
+          value={password}
           onChange={onChangePassword}
           isValid={password !== ""}
           errorMessage="비밀번호를 입력하세요."
         />
       </div>
       <div className="login-modal-submit-button-wrapper">
-        <Button type="submit">로그인</Button>
+        <Button type="submit" color="bittersweet">
+          로그인
+        </Button>
       </div>
       <p>
         이미 에어비앤비 계정이 있나요?

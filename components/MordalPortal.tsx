@@ -11,12 +11,12 @@ const Container = styled.div`
   position: fixed;
   top: 0;
   left: 0;
+  z-index: 11;
   .modal-background {
     position: absolute;
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.75);
-    z-index: 10;
   }
 `;
 
@@ -40,7 +40,11 @@ const ModalPortal: React.FC<IProps> = ({ children, closePortal }) => {
   if (ref.current && mounted) {
     return createPortal(
       <Container>
-        <div className="modal-background" />
+        <div
+          className="modal-background"
+          role="presentation"
+          onClick={closePortal}
+        />
         {children}
       </Container>,
       ref.current
