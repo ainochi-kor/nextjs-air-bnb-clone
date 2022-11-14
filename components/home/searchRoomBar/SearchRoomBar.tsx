@@ -1,20 +1,13 @@
+import React from "react";
 import styled from "styled-components";
 import palette from "../../../styles/palette";
-
-const SearchRoomBar: React.FC = () => {
-  return (
-    <Container>
-      <div className="search-room-bar-inputs">
-        
-      </div>
-    </Container>
-  );
-};
-
-export default SearchRoomBar;
+import SearchRoomBarLocation from "./SearchRoomBarLocation";
+import SearchRoomCheckInDate from "./SearchRoomCheckInDate";
+import SearchRoomCheckOutDate from "./SearchRoomCheckOutDate";
+import SearchRoomGuests from "./SearchRoomGuests";
 
 const Container = styled.div`
-  widht: 100%;
+  width: 100%;
   height: 70px;
   display: flex;
   align-items: center;
@@ -23,7 +16,7 @@ const Container = styled.div`
 
   .search-room-bar-inputs {
     display: flex;
-    align-item: center;
+    align-items: center;
     width: 100%;
     .search-room-bar-input-divider {
       width: 1px;
@@ -32,3 +25,21 @@ const Container = styled.div`
     }
   }
 `;
+
+const SearchRoomBar: React.FC = () => {
+  return (
+    <Container>
+      <div className="search-room-bar-inputs">
+        <SearchRoomBarLocation />
+        <div className="search-room-bar-input-divider " />
+        <SearchRoomCheckInDate />
+        <div className="search-room-bar-input-divider " />
+        <SearchRoomCheckOutDate />
+        <div className="search-room-bar-input-divider " />
+        <SearchRoomGuests />
+      </div>
+    </Container>
+  );
+};
+
+export default SearchRoomBar;
