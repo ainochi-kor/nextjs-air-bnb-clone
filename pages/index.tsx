@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import Home from "../components/home/Home";
 
 const Container = styled.div`
   font-size: 21px;
@@ -7,7 +8,7 @@ const Container = styled.div`
 `;
 
 const index: React.FC = () => {
-  return <Container>hello world</Container>;
+  return <Home />;
 };
 
 export default index;
